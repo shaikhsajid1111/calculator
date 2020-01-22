@@ -3,21 +3,24 @@ import java.awt.event.*;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import java.lang.*; 
+
+
 class button_creater{
 		button_creater(){
 		
 		JFrame fr = new JFrame("Calculator");
-		 try { 
-            // set look and feel 
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+        try { 
+  			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } 
         catch (Exception e) { 
-            System.err.println(e.getMessage()); 
+            System.out.println("Look and Feel not set"); 
+
         } 
 		/*textfield*/
 		JTextField input = new JTextField();
 		input.setEditable(false);
-		input.setBounds(50,50,210,50);				//x,y,w,h
+		input.setBounds(50,50,215,50);				//x,y,w,h
 		/*1-2-3 row*/
 		JButton one = new JButton("1");
 		one.setBounds(50,155,50,50);			//x,y,w,h
@@ -96,17 +99,37 @@ class button_creater{
         }  
     }); 
 
+		JButton zero = new JButton("0");
+		zero.setBounds(105,320,50,50);
+		zero.addActionListener(new ActionListener(){  
+				public void actionPerformed(ActionEvent e){  
+            input.setText(input.getText() + zero.getText());  
+        }  
+    }); 
 
 
 		JButton clear = new JButton("c");
-		clear.setBounds(215,155,50,50);
+		clear.setBounds(215,265,50,50);				//215,210,50,50
 		clear.addActionListener(new ActionListener(){  
 				public void actionPerformed(ActionEvent e){  
             input.setText("");  
         }  
     }); 
+		JButton delete_button = new JButton("Del");
+		delete_button.setBounds(160,320,50,50);
+		delete_button.addActionListener(new ActionListener(){  
+				public void actionPerformed(ActionEvent e){  
+            		StringBuffer texts = new StringBuffer(input.getText());
+            		//System.out.println(texts);
+            		int len = texts.length();
+            		//System.out.println(len);
+            		texts.delete(len-1,len);
+            		input.setText(texts.toString());
+
+        }  
+    }); 
 		JButton add_button = new JButton("+");
-		add_button.setBounds(215,210,50,105);
+		add_button.setBounds(215,155,50,50);
 		add_button.addActionListener(new ActionListener(){  
 				public void actionPerformed(ActionEvent e){  
             input.setText(input.getText() + add_button.getText());  
@@ -146,26 +169,57 @@ class button_creater{
 				public void actionPerformed(ActionEvent e){  
             input.setText(input.getText() + point.getText());  
         }  
-    }); 
-		JButton calculate = new JButton("=");
-		calculate.setBounds(100,315,50,50);
-		calculate.addActionListener(new ActionListener(){  
+    		}); 
+		JButton modulus = new JButton("%");
+		modulus.setBounds(215,210,50,50);
+		modulus.addActionListener(new ActionListener(){  
 				public void actionPerformed(ActionEvent e){  
-					try{
-              ScriptEngineManager manager = new ScriptEngineManager();
-              ScriptEngine engine = manager.getEngineByName("JavaScript");
+            input.setText(input.getText() + modulus.getText());  
+        }  
+    		}); 
+		@SuppressWarnings("unchecked")
+		JButton calculate = new JButton("=");
+		calculate.setBounds(215,320,50,50);
+		calculate.addActionListener(new ActionListener(){
+			@SuppressWarnings("unchecked")  
+			public void actionPerformed(ActionEvent e){  
+				try{
+
+					@SuppressWarnings("unchecked")
+              		ScriptEngineManager manager = new ScriptEngineManager();
+              		ScriptEngine engine = manager.getEngineByName("js");
               //System.out.println(engine.eval(input.getText()));
-				Object res = engine.eval(input.getText());
-				input.setText(res.toString());
+					Object res = engine.eval(input.getText());
+						input.setText(res.toString());
 						}
-						catch(Exception ex){
-							System.out.println("Syntax Error");
+				catch(Exception ex){
+						
+						input.setText("Syntax Error");
+						System.out.println(ex);
 						}	
         }  
     });
+		JButton square = new JButton("n2");
+		square.setBounds(50,320,50,50);
+		square.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){  
+            	try{
+            		String str_num = input.getText();
+            		float num = Float.parseFloat(str_num);
+            		float square = num*num;
+            		String converted_num = String.valueOf(square);
+            		input.setText(converted_num);
+            	}  
+            	catch(Exception ex){
+            		input.setText("Syntax Error");
+            		System.out.println(ex);
+            	}
+        }  
+    }); 
+
 
 		JButton close = new JButton("close");
-		close.setBounds(10,10,30,30);
+		close.setBounds(10,10,60,30);
 		close.addActionListener(e -> System.exit(0));
 		fr.add(input);
 		fr.add(one);
@@ -177,7 +231,9 @@ class button_creater{
 		fr.add(seven);
 		fr.add(eight);
 		fr.add(nine);
+		fr.add(zero);
 		fr.add(clear);
+		fr.add(delete_button);
 		fr.add(add_button);
 		fr.add(subtract);
 		fr.add(close);
@@ -185,12 +241,17 @@ class button_creater{
 		fr.add(divide);
 		fr.add(point);
 		fr.add(calculate);
-		fr.setSize(400,400);
+		fr.add(square);
+		fr.add(modulus);
+
+		fr.setResizable(false);
+		fr.setSize(350,450);
 		fr.setLayout(null);
 		fr.setVisible(true);
 		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 }
 }
+
 public class calculator{
 	public static void main(String[] args) {
 		button_creater bt = new button_creater();
