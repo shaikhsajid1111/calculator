@@ -4,12 +4,18 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.lang.*; 
-
-
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 class button_creater{
+		ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("js");
+        
 		button_creater(){
-		
 		JFrame fr = new JFrame("Calculator");
+		Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("icon/favicon.png"));  
+		ImageIcon icon = new ImageIcon();
+		fr.setIconImage(icon.getImage());
         try { 
   			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } 
@@ -20,7 +26,7 @@ class button_creater{
 		/*textfield*/
 		JTextField input = new JTextField();
 		input.setEditable(false);
-		input.setBounds(50,50,215,50);				//x,y,w,h
+		input.setBounds(50,40,270,50);				//x,y,w,h
 		/*1-2-3 row*/
 		JButton one = new JButton("1");
 		one.setBounds(50,155,50,50);			//x,y,w,h
@@ -188,9 +194,8 @@ class button_creater{
 					@SuppressWarnings("unchecked")
               		ScriptEngineManager manager = new ScriptEngineManager();
               		ScriptEngine engine = manager.getEngineByName("js");
-              //System.out.println(engine.eval(input.getText()));
 					Object res = engine.eval(input.getText());
-						input.setText(res.toString());
+					input.setText(res.toString());
 						}
 				catch(Exception ex){
 						
@@ -199,14 +204,17 @@ class button_creater{
 						}	
         }  
     });
-		JButton square = new JButton("n2");
+		JButton square = new JButton("n\u00b2");
 		square.setBounds(50,320,50,50);
 		square.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
             	try{
             		String str_num = input.getText();
-            		float num = Float.parseFloat(str_num);
-            		float square = num*num;
+
+            		Object result = engine.eval(str_num);
+            		double num = Double.parseDouble(result.toString());
+
+            		double square = num*num;
             		String converted_num = String.valueOf(square);
             		input.setText(converted_num);
             	}  
@@ -216,10 +224,120 @@ class button_creater{
             	}
         }  
     }); 
+		/*factorial*/
+		JButton fact = new JButton("!");
+		fact.setBounds(270,100,50,50);			//x,y,wh
+		fact.addActionListener(new ActionListener(){  
+			 double factorial(double n){    
+  					if (n < 2)    
+    					return n;    
+  					else    
+    					return(n * factorial(n-1));    
+ 						}    
+			public void actionPerformed(ActionEvent e){  
+            	try{
+            		String str_num = input.getText();
+            		Object result = engine.eval(str_num);
+            		double num = Double.parseDouble(result.toString());
+        			double res = factorial(num);
 
+            		String converted_num = String.valueOf(res);
+            		input.setText(converted_num);
+            	}  
+            	catch(Exception ex){
+            		input.setText("Syntax Error");
+            		System.out.println(ex);
+            	}
+        }  
+    }); 
+		/*log button and action*/
+		JButton log_button = new JButton("log");
+		log_button.setBounds(270,155,50,50);			//x,y,wh
+		log_button.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){  
+            	try{
+            		String str_num = input.getText();
+            		
+            		Object result = engine.eval(str_num);
+            		double num = Double.parseDouble(result.toString());
 
-		JButton close = new JButton("close");
-		close.setBounds(10,10,60,30);
+            		
+              		double res = Math.log(num);
+              		String converted_num = String.valueOf(res);
+            		input.setText(converted_num);
+            	}  
+            	catch(Exception ex){
+            		input.setText("Syntax Error");
+            		System.out.println(ex);
+            	}
+        }  
+    }); 
+		/*square root*/
+		JButton square_root = new JButton("\u221A");
+		square_root.setBounds(270,210,50,50);			//x,y,wh
+		square_root.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){  
+            	try{
+            		String str_num = input.getText();
+
+            		Object result = engine.eval(str_num);
+            		double num = Double.parseDouble(result.toString());
+
+              		double res = Math.sqrt(num);
+              		String converted_num = String.valueOf(res);
+            		input.setText(converted_num);
+            	}  
+            	catch(Exception ex){
+            		input.setText("Syntax Error");
+            		System.out.println(ex);
+            	}
+        }  
+    }); 
+		/*Cube root*/
+		JButton cube_root = new JButton("\u221A3");
+		cube_root.setBounds(270,265,50,50);			//x,y,wh
+		cube_root.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){  
+            	try{
+            		String str_num = input.getText();
+
+            		Object result = engine.eval(str_num);
+            		double num = Double.parseDouble(result.toString());
+
+              		double res = Math.cbrt(num);
+              		String converted_num = String.valueOf(res);
+            		input.setText(converted_num);
+            	}  
+            	catch(Exception ex){
+            		input.setText("Syntax Error");
+            		System.out.println(ex);
+            	}
+        }  
+    }); 
+		JButton exponential = new JButton("e");
+		exponential.setBounds(270,320,50,50);			//x,y,wh
+		exponential.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){  
+            	try{
+            		String str_num = input.getText();
+
+            		Object result = engine.eval(str_num);
+            		double num = Double.parseDouble(result.toString());
+
+              		double res = Math.exp(num);
+              		String converted_num = String.valueOf(res);
+            		input.setText(converted_num);
+            	}  
+            	catch(Exception ex){
+            		input.setText("Syntax Error");
+            		System.out.println(ex);
+            	}
+        }  
+    }); 
+
+		JButton close = new JButton("X");
+		close.setBackground(Color.RED);
+		close.setBounds(280,320+55,40,40);
 		close.addActionListener(e -> System.exit(0));
 		fr.add(input);
 		fr.add(one);
@@ -243,9 +361,13 @@ class button_creater{
 		fr.add(calculate);
 		fr.add(square);
 		fr.add(modulus);
-
+		fr.add(fact);
+		fr.add(log_button);
+		fr.add(square_root);
+		fr.add(cube_root);
+		fr.add(exponential);
 		fr.setResizable(false);
-		fr.setSize(350,450);
+		fr.setSize(370,460);	
 		fr.setLayout(null);
 		fr.setVisible(true);
 		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
