@@ -6,16 +6,14 @@ import javax.script.ScriptException;
 import java.lang.*; 
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.Toolkit;
 class button_creater{ 
 		ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("js");
-        
+        ImageIcon icon;
 		button_creater(){
 		JFrame fr = new JFrame("Calculator");			/*Container*/
 		/*setting image icon*/
-		Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("icon/favicon.png"));  
-		ImageIcon icon = new ImageIcon();
+		icon = new ImageIcon("icon/favicon.png");
 		fr.setIconImage(icon.getImage());
 		/*changing theme of GUI window*/
         try { 
@@ -29,6 +27,7 @@ class button_creater{
 		JTextField input = new JTextField();
 		input.setEditable(false);
 		input.setBounds(50,40,270+55,50);				//x,y,w,h
+		input.setHorizontalAlignment(SwingConstants.RIGHT);
 		/*1-2-3 button row*/
 		JButton one = new JButton("1");
 		one.setBounds(50,155,50,50);			//x,y,w,h setting to window
@@ -208,6 +207,10 @@ class button_creater{
 				catch(NullPointerException exe){	
             		return;
             	}
+            	catch(ScriptException exe){
+            		input.setText("Syntax Error");
+            		return;
+            	}
 				catch(Exception ex){
 						input.setText("Syntax Error");
 						System.out.println(ex);
@@ -344,7 +347,7 @@ class button_creater{
         }  
     }); 
 		JButton exponential = new JButton("e");
-		exponential.setBounds(270,320,50,50);			//x,y,wh
+		exponential.setBounds(270,320,50,50);			//x,y,w,h
 		exponential.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
             	try{
@@ -392,10 +395,13 @@ class button_creater{
             input.setText(input.getText() + ")" );  
         }  
     });
+
+
 		/*exit button*/
 		JButton close = new JButton("X");
 		close.setBackground(Color.RED);				/*Background color*/
-		close.setBounds(325,320,50,50);						//(325,265,50,50)
+		close.setBounds(325,320,50,50);
+		/*adding close operation*/						//(325,265,50,50)
 		close.addActionListener(e -> System.exit(0));
 		
 		/*adding all buttons to frame*/
@@ -430,11 +436,10 @@ class button_creater{
 		fr.add(left_parenthesis);
 		fr.add(right_parenthesis);
 
-
-		fr.setResizable(false);
-		fr.setSize(420,460);	
+		fr.setResizable(false);	/*disabling resizing of window*/
+		fr.setSize(420,460);	/*setting default size of window*/
 		fr.setLayout(null);
-		fr.setVisible(true);
+		fr.setVisible(true);	
 		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 }
 }
